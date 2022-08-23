@@ -16,24 +16,27 @@ import {
   //   AntDesign,
   Feather,
 } from '@expo/vector-icons';
+
+const AuthStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+
 function MyTabs() {
   return (
     <Tab.Navigator
       initialRouteName="Posts"
       screenOptions={{
-        tabBarStyle: {
-          height: 84,
-          paddingTop: 9,
-          paddingBottom: 15,
-        },
         headerTitleStyle: {
           fontFamily: 'Roboto-Medium',
           fontSize: 17,
           color: '#212121',
         },
+        tabBarShowLabel: false,
+        tabBarStyle: {
+          height: 84,
+          paddingTop: 9,
+          paddingBottom: 15,
+        },
       }}
-      tabBarOptions={{ showLabel: false }}
     >
       <Tab.Screen
         name="Posts"
@@ -55,7 +58,7 @@ function MyTabs() {
         name="Create"
         component={CreatePostsScreen}
         options={{
-          title: 'Create Posts',
+          title: 'Create posts',
 
           tabBarIcon: () => (
             <View
@@ -63,7 +66,7 @@ function MyTabs() {
                 backgroundColor: '#FF6C00',
                 width: 70,
                 height: 40,
-                flex: 1,
+                flex: 0,
                 alignItems: 'center',
                 justifyContent: 'center',
                 borderRadius: 20,
@@ -84,8 +87,6 @@ function MyTabs() {
     </Tab.Navigator>
   );
 }
-
-const AuthStack = createStackNavigator();
 
 export const useRoute = isAuth => {
   if (!isAuth) {
@@ -113,56 +114,3 @@ export const useRoute = isAuth => {
     // </MainTab.Navigator>
   );
 };
-
-// function MyTabBar({ state, descriptors, navigation }) {
-//   return (
-//     <View style={{ flexDirection: 'row' }}>
-//       {state.routes.map((route, index) => {
-//         const { options } = descriptors[route.key];
-//         const label =
-//           options.tabBarLabel !== undefined
-//             ? options.tabBarLabel
-//             : options.title !== undefined
-//             ? options.title
-//             : route.name;
-
-//         const isFocused = state.index === index;
-
-//         const onPress = () => {
-//           const event = navigation.emit({
-//             type: 'tabPress',
-//             target: route.key,
-//           });
-
-//           if (!isFocused && !event.defaultPrevented) {
-//             navigation.navigate(route.name);
-//           }
-//         };
-
-//         const onLongPress = () => {
-//           navigation.emit({
-//             type: 'tabLongPress',
-//             target: route.key,
-//           });
-//         };
-
-//         return (
-//           <TouchableOpacity
-//             accessibilityRole="button"
-//             accessibilityState={isFocused ? { selected: true } : {}}
-//             accessibilityLabel={options.tabBarAccessibilityLabel}
-//             testID={options.tabBarTestID}
-//             onPress={onPress}
-//             onLongPress={onLongPress}
-//             style={{ flex: 1 }}
-//             key={route.key}
-//           >
-//             <Text style={{ color: isFocused ? '#673ab7' : '#222' }}>
-//               {label}
-//             </Text>
-//           </TouchableOpacity>
-//         );
-//       })}
-//     </View>
-//   );
-// }
