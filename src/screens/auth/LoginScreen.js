@@ -13,6 +13,9 @@ import {
   Pressable,
   // Dimensions,
 } from 'react-native';
+import { useDispatch } from 'react-redux';
+
+import { logIn } from '../../redux/session/session-operations';
 
 const initialState = {
   email: '',
@@ -47,6 +50,14 @@ export default function LoginScreen({ navigation }) {
     Keyboard.dismiss();
     // console.log(state);
     // setState(initialState);
+  };
+
+  const dispatch = useDispatch();
+
+  const handleSubmit = async () => {
+    console.log('state', state);
+    await dispatch(logIn(state));
+    // resetForm();
   };
 
   return (
@@ -97,7 +108,7 @@ export default function LoginScreen({ navigation }) {
             </View>
             <TouchableOpacity
               activeOpacity={0.8}
-              onPress={() => setState(initialState)}
+              onPress={handleSubmit}
               style={{
                 ...styles.btn,
                 display: isShowKeyboard ? 'none' : 'flex',

@@ -20,6 +20,30 @@ import {
 const AuthStack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
+export const useRoute = isAuth => {
+  if (!isAuth) {
+    return (
+      <AuthStack.Navigator>
+        <AuthStack.Screen
+          options={{
+            headerShown: false,
+          }}
+          name="Login"
+          component={LoginScreen}
+        />
+        <AuthStack.Screen
+          options={{
+            headerShown: false,
+          }}
+          name="Register"
+          component={RegisterScreen}
+        />
+      </AuthStack.Navigator>
+    );
+  }
+  return <MyTabs />;
+};
+
 function MyTabs() {
   return (
     <Tab.Navigator
@@ -87,30 +111,3 @@ function MyTabs() {
     </Tab.Navigator>
   );
 }
-
-export const useRoute = isAuth => {
-  if (!isAuth) {
-    return (
-      <AuthStack.Navigator>
-        <AuthStack.Screen
-          options={{
-            headerShown: false,
-          }}
-          name="Login"
-          component={LoginScreen}
-        />
-        <AuthStack.Screen
-          options={{
-            headerShown: false,
-          }}
-          name="Register"
-          component={RegisterScreen}
-        />
-      </AuthStack.Navigator>
-    );
-  }
-  return (
-    <MyTabs />
-    // </MainTab.Navigator>
-  );
-};
