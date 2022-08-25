@@ -16,21 +16,22 @@ const token = {
   },
 };
 
-// const register = createAsyncThunk(
-//   'register',
-//   async (credentials, { rejectWithValue }) => {
-//     try {
-//       await axios.post('/api/auth/register', credentials);
-//     } catch (error) {
-//       if (error.response.status === 409) {
-//         toast.error('Sorry, this email in use!');
-//         return rejectWithValue();
-//       }
-//       toast.error(error.message);
-//       return rejectWithValue();
-//     }
-//   }
-// );
+const register = createAsyncThunk(
+  'register',
+  async (credentials, { rejectWithValue }) => {
+    try {
+      await axios.post('/api/auth/register', credentials);
+    } catch (error) {
+      if (error.response.status === 409) {
+        // toast.error('Sorry, this email in use!');
+        console.log('Sorry, this email in use!');
+        return rejectWithValue();
+      }
+      // toast.error(error.message);
+      return rejectWithValue();
+    }
+  }
+);
 
 const logIn = createAsyncThunk(
   '/login',
@@ -51,39 +52,43 @@ const logIn = createAsyncThunk(
   }
 );
 
-// const logOut = createAsyncThunk(
-//   'auth/logout',
-//   async (_, { rejectWithValue }) => {
-//     try {
-//       await axios.get('/api/auth/logout');
-//       token.unset('');
-//     } catch (error) {
-//       toast.error('Something went wrong. Try again,please');
-//       return rejectWithValue();
-//     }
-//   }
-// );
+const logOut = createAsyncThunk(
+  'auth/logout',
+  async (_, { rejectWithValue }) => {
+    try {
+      await axios.get('/api/auth/logout');
+      token.unset('');
+    } catch (error) {
+      // toast.error('Something went wrong. Try again,please');
+      console.log(error);
+      return rejectWithValue();
+    }
+  }
+);
 
-// const refresh = createAsyncThunk(
-//   'auth/refresh',
-//   async (_, { getState, rejectWithValue }) => {
-//     const state = getState();
-//     const localStorageToken = state.session.token;
+const refresh = createAsyncThunk(
+  'auth/refresh',
+  async (_, { getState, rejectWithValue }) => {
+    console.log('refresh');
+    const state = getState();
+    const localStorageToken = state.session.token;
+    if (localStorageToken === null) return rejectWithValue();
 
-//     if (localStorageToken === null) return rejectWithValue();
+    token.set(localStorageToken);
+    try {
+      const { data } = await axios.get('/api/auth/current');
+      // console.log('data refresh opera', data);
 
-//     token.set(localStorageToken);
-//     try {
-//       const { data } = await axios.get('/api/auth/current');
-//       return data;
-//     } catch (error) {
-//       if (error.response.status === 401) {
-//         toast.error('Session expired. Please, log in again');
-//       }
-//       return rejectWithValue();
-//     }
-//   }
-// );
+      return data;
+    } catch (error) {
+      console.log(error);
+      if (error.response.status === 401) {
+        // toast.error('Session expired. Please, log in again');
+        console.log('Session expired. Please, log in again!');
+      }
+      return rejectWithValue();
+    }
+  }
+);
 
-export { logIn };
-// export { register, logIn, logOut, refresh };
+export { register, logIn, logOut, refresh };

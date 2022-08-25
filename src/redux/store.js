@@ -19,7 +19,7 @@ import sessionReducer from './session/session-slice';
 const sessionPersistConfig = {
   key: 'session',
   storage: AsyncStorage,
-  whitelist: ['token'],
+  whitelist: ['token', 'isAuth'],
 };
 const rootReducer = combineReducers({
   //   global: globalReducer,
@@ -27,6 +27,7 @@ const rootReducer = combineReducers({
   //   session: sessionReducer,
   session: persistReducer(sessionPersistConfig, sessionReducer),
 });
+
 export const store = configureStore({
   reducer: rootReducer,
 

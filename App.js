@@ -9,7 +9,7 @@ import * as SplashScreen from 'expo-splash-screen';
 
 import useFontsLoaded from './src/stylesheet/useFontsLoaded';
 
-import { useRoute } from './router';
+import Router from './router';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -20,12 +20,14 @@ export default function App() {
     return null;
   }
 
-  const routing = useRoute(0);
+  // const routing = useRoute(0);
 
   return (
     <Provider store={store}>
       <PersistGate loading={<Text>Loading...</Text>} persistor={persistor}>
-        <NavigationContainer>{routing}</NavigationContainer>
+        <NavigationContainer>
+          <Router />
+        </NavigationContainer>
       </PersistGate>
     </Provider>
   );

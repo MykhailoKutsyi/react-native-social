@@ -1,19 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { logIn } from './session-operations';
-// import { logOut, logIn, refresh } from './session-operations';
+import { logIn, logOut, refresh } from './session-operations';
 
 const initialState = {
-  error: null,
   isAuth: false,
-  loading: false,
+  isLoading: false,
 
   token: null,
 
   user: {
-    id: '',
     name: 'Unknown',
     email: '',
-    balance: '',
   },
 };
 
@@ -21,35 +17,39 @@ const sessionSlice = createSlice({
   name: 'session',
   initialState,
   extraReducers: {
+    [logIn.pending](state) {
+      state.isLoading = true;
+    },
+    [logIn.rejected]() {
+      return initialState;
+    },
     [logIn.fulfilled](state, { payload }) {
       state.token = payload.token;
       state.isAuth = true;
-      state.loading = false;
+      state.isLoading = false;
     },
-    [logIn.rejected](state) {
-      state.error = true;
+
+    [logOut.pending](state, _) {
+      state.isLoading = true;
     },
-    [logIn.pending](state) {
-      state.loading = true;
+    [logOut.rejected](state, _) {
+      state.isLoading = false;
+    },
+    [logOut.fulfilled]() {
+      return initialState;
+    },
+    [refresh.pending](state) {
+      state.isLoading = true;
+    },
+    [refresh.rejected]() {
+      return initialState;
+    },
+    [refresh.fulfilled](state, { payload }) {
+      state.isLoading = false;
+      state.user = payload;
+      state.isAuth = true;
     },
   },
-  //     [logOut.pending](state, _) {
-  //       state.loading = true;
-  //     },
-  //     [logOut.rejected](state, _) {
-  //       state.loading = false;
-  //     },
-  //     [logOut.fulfilled]() {
-  //       return initialState;
-  //     },
-  //     [refresh.fulfilled](state, { payload }) {
-  //       state.user = payload;
-  //       state.isAuth = true;
-  //     },
-  //     [refresh.rejected]() {
-  //       return initialState;
-  //     },
-  //   },
 });
 
 export default sessionSlice.reducer;

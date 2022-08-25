@@ -6,15 +6,12 @@ import {
   ImageBackground,
   TextInput,
   TouchableOpacity,
-  // Platform,
-  // KeyboardAvoidingView,
   Keyboard,
   TouchableWithoutFeedback,
   Pressable,
-  // Dimensions,
 } from 'react-native';
-import { useDispatch } from 'react-redux';
 
+import { useDispatch } from 'react-redux';
 import { logIn } from '../../redux/session/session-operations';
 
 const initialState = {
@@ -26,6 +23,8 @@ export default function LoginScreen({ navigation }) {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
   const [passwordShown, setPasswordShown] = useState(false);
+
+  const dispatch = useDispatch();
 
   const togglePassword = () => {
     setPasswordShown(!passwordShown);
@@ -46,18 +45,22 @@ export default function LoginScreen({ navigation }) {
   }, []);
 
   const keyboardHide = () => {
-    // setIsShowKeyboard(false);
     Keyboard.dismiss();
-    // console.log(state);
-    // setState(initialState);
   };
 
-  const dispatch = useDispatch();
+  const removeSpaces = () => {
+    const tempEmail = state.email.trim().toLowerCase();
+    setState(prevState => ({ ...prevState, email: tempEmail }));
+  };
 
   const handleSubmit = async () => {
     console.log('state', state);
     await dispatch(logIn(state));
     // resetForm();
+  };
+
+  const resetForm = () => {
+    setState(initialState);
   };
 
   return (
@@ -81,7 +84,9 @@ export default function LoginScreen({ navigation }) {
               <TextInput
                 style={styles.input}
                 placeholder={'Email'}
+                keyboardType={'email-address'}
                 onSubmitEditing={Keyboard.dismiss}
+                onBlur={removeSpaces}
                 value={state.email}
                 onChangeText={value =>
                   setState(prevState => ({ ...prevState, email: value }))
@@ -114,7 +119,7 @@ export default function LoginScreen({ navigation }) {
                 display: isShowKeyboard ? 'none' : 'flex',
               }}
             >
-              <Text style={styles.btnTitle}>LOG IN</Text>
+              <Text style={styles.btnTitle}>Log in</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={{
@@ -222,6 +227,7 @@ const styles = StyleSheet.create({
   btnTitle: {
     fontFamily: 'Roboto-Medium',
     fontSize: 18,
+    textTransform: 'uppercase',
     color: '#fff',
   },
 
